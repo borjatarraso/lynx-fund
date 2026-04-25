@@ -229,20 +229,20 @@ def render_costs(console: Console, report: FundReport) -> None:
     t.add_row(_t("management_fee"), fmt_pct(c.management_fee, 3), "")
     if c.gross_expense_ratio is not None:
         t.add_row(_t("gross_expense_ratio"), fmt_pct(c.gross_expense_ratio, 3),
-                  "[dim]Before fee waivers[/]")
+                  f"[dim]{_t('note_before_waivers')}[/]")
     if c.twelve_b1_fee:
         col = "[red]" if c.twelve_b1_fee > 0.0025 else "[yellow]"
         t.add_row(_t("twelve_b1_fee"), fmt_pct(c.twelve_b1_fee, 3),
                   f"{col}Distribution fee — paid out of fund assets[/]")
     if c.front_load_max:
         t.add_row(_t("front_load_max"), fmt_pct(c.front_load_max),
-                  "[bold red]Direct return drag — prefer no-load[/]")
+                  f"[bold red]{_t('note_load_drag')}[/]")
     if c.deferred_load_max:
         t.add_row(_t("deferred_load_max"), fmt_pct(c.deferred_load_max),
-                  "[yellow]Back-end charge if you sell early[/]")
+                  f"[yellow]{_t('note_cdsc')}[/]")
     if c.redemption_fee:
         t.add_row(_t("redemption_fee"), fmt_pct(c.redemption_fee),
-                  "[dim]Short-term-trading penalty[/]")
+                  f"[dim]{_t('note_short_term_penalty')}[/]")
     if c.portfolio_turnover_pct is not None:
         turn_note = f"[green]{_t('low_turnover')}[/]" if c.portfolio_turnover_pct < 0.20 \
             else (f"[yellow]{_t('active_turnover')}[/]" if c.portfolio_turnover_pct < 0.75
@@ -251,14 +251,14 @@ def render_costs(console: Console, report: FundReport) -> None:
     if c.total_cost_of_ownership_bps is not None:
         t.add_row(_t("total_cost_ownership"),
                   f"{c.total_cost_of_ownership_bps:.1f} bps",
-                  "[dim]TER + amortised loads + extra 12b-1[/]")
+                  f"[dim]{_t('note_tco_breakdown')}[/]")
     if c.estimated_cost_10k_year1 is not None:
         t.add_row(_t("est_cost_1y"),
                   f"${c.estimated_cost_10k_year1:.2f}", "")
     if c.estimated_cost_10k_year10 is not None:
         t.add_row(_t("est_cost_10y"),
                   f"${c.estimated_cost_10k_year10:.2f}",
-                  "[dim]Compound drag over a decade[/]")
+                  f"[dim]{_t('note_compound_drag')}[/]")
     console.print(t)
 
 
@@ -275,12 +275,12 @@ def render_income(console: Console, report: FundReport) -> None:
         if y is None:
             return "[dim]N/A[/]"
         if y >= 0.04:
-            return "[bold green]High income[/]"
+            return f"[bold green]{_t('yield_high_income')}[/]"
         if y >= 0.02:
-            return "[green]Solid income[/]"
+            return f"[green]{_t('yield_solid_income')}[/]"
         if y >= 0.005:
-            return "[cyan]Modest[/]"
-        return "[dim]Low / accumulating[/]"
+            return f"[cyan]{_t('yield_modest')}[/]"
+        return f"[dim]{_t('yield_low_accumulating')}[/]"
 
     t.add_row(_t("dividend_yield_ttm"), fmt_pct(i.dividend_yield),
               _yield_assess(i.dividend_yield))
@@ -321,42 +321,42 @@ def render_liquidity(console: Console, report: FundReport) -> None:
     if l.minimum_initial_investment is not None:
         m = l.minimum_initial_investment
         if m >= 1_000_000:
-            note = "[dim]Institutional share class[/]"
+            note = f"[dim]{_t('note_institutional')}[/]"
         elif m >= 100_000:
-            note = "[dim]High-net-worth share class[/]"
+            note = f"[dim]{_t('note_hnw')}[/]"
         elif m >= 3000:
-            note = "[dim]Standard retail entry[/]"
+            note = f"[dim]{_t('note_retail_entry')}[/]"
         else:
-            note = "[green]Accessible[/]"
+            note = f"[green]{_t('note_accessible')}[/]"
         t.add_row(_t("minimum_initial_investment"), f"${m:,.0f}", note)
     if l.minimum_subsequent_investment is not None:
         t.add_row(_t("minimum_subsequent"),
                   f"${l.minimum_subsequent_investment:,.0f}", "")
     if l.pricing_frequency:
         t.add_row(_t("pricing"), l.pricing_frequency,
-                  "[dim]Mutual funds price once per day at NAV[/]")
+                  f"[dim]{_t('note_daily_nav')}[/]")
     if l.cutoff_time_local:
         t.add_row("Order Cut-Off", l.cutoff_time_local,
-                  "[dim]After this time you get next day's NAV[/]")
+                  f"[dim]{_t('note_cutoff_nav')}[/]")
     if l.swing_pricing is not None:
         t.add_row(_t("swing_pricing"), "Yes" if l.swing_pricing else "No",
-                  "[green]Protects long-term holders from flow dilution[/]"
+                  f"[green]{_t('note_swing_protects')}[/]"
                   if l.swing_pricing else "")
     if l.redemption_gates is not None:
         t.add_row(_t("redemption_gates"), "Yes" if l.redemption_gates else "No",
-                  "[yellow]Manager may suspend redemptions[/]"
-                  if l.redemption_gates else "[green]No gating[/]")
+                  f"[yellow]{_t('note_gates_warning')}[/]"
+                  if l.redemption_gates else f"[green]{_t('note_no_gating')}[/]")
     if l.lockup_period_days:
         t.add_row("Lock-Up", f"{l.lockup_period_days} days",
-                  "[yellow]Required holding period[/]")
+                  f"[yellow]{_t('note_lockup')}[/]")
     if l.soft_closed:
         t.add_row(_t("soft_closed"), "Yes",
-                  "[yellow]New investors blocked; existing OK[/]")
+                  f"[yellow]{_t('note_soft_closed')}[/]")
     if l.hard_closed:
         t.add_row(_t("hard_closed"), "Yes",
-                  "[red]No subscriptions accepted[/]")
+                  f"[red]{_t('note_hard_closed')}[/]")
     if l.net_flows_1y is not None:
-        flow_note = "[green]Net inflows[/]" if l.net_flows_1y > 0 else "[yellow]Net outflows[/]"
+        flow_note = f"[green]{_t('note_net_inflows')}[/]" if l.net_flows_1y > 0 else f"[yellow]{_t('note_net_outflows')}[/]"
         t.add_row("Net Flows (1Y)", fmt_money(l.net_flows_1y), flow_note)
     if l.closure_risk:
         risk_note = {
@@ -386,8 +386,8 @@ def render_performance(console: Console, report: FundReport) -> None:
         ("YTD", p.return_ytd, ""),
         ("1Y",  p.return_1y, ""),
         ("3Y CAGR", p.return_3y, ""),
-        ("5Y CAGR", p.return_5y, "[dim]Long-run trend[/]"),
-        ("10Y CAGR", p.return_10y, "[dim]Cycle-spanning[/]"),
+        ("5Y CAGR", p.return_5y, f"[dim]{_t('note_long_run_trend')}[/]"),
+        ("10Y CAGR", p.return_10y, f"[dim]{_t('note_cycle_spanning')}[/]"),
         ("Since Inception CAGR", p.cagr_since_inception, ""),
     ]
     for label, val, note in rows:
@@ -405,14 +405,14 @@ def render_performance(console: Console, report: FundReport) -> None:
         if s is None:
             return "[dim]N/A[/]"
         if s >= 1.5:
-            return "[bold green]Excellent[/]"
+            return f"[bold green]{_t('rating_excellent')}[/]"
         if s >= 1.0:
-            return "[green]Strong[/]"
+            return f"[green]{_t('rating_strong')}[/]"
         if s >= 0.5:
-            return "[cyan]Acceptable[/]"
+            return f"[cyan]{_t('rating_acceptable')}[/]"
         if s >= 0:
-            return "[yellow]Weak[/]"
-        return "[bold red]Negative[/]"
+            return f"[yellow]{_t('rating_weak')}[/]"
+        return f"[bold red]{_t('rating_negative')}[/]"
 
     t2.add_row(_t("sharpe_1y"), fmt_num(p.sharpe_1y), _sharpe_assess(p.sharpe_1y))
     t2.add_row(_t("sharpe_3y"), fmt_num(p.sharpe_3y), _sharpe_assess(p.sharpe_3y))
@@ -437,18 +437,18 @@ def render_allocation(console: Console, report: FundReport) -> None:
         if c is None:
             return "[dim]N/A[/]"
         if c >= 0.5:
-            return "[bold red]Highly concentrated[/]"
+            return f"[bold red]{_t('conc_highly')}[/]"
         if c >= 0.35:
-            return "[yellow]Concentrated[/]"
+            return f"[yellow]{_t('conc_concentrated')}[/]"
         if c >= 0.20:
-            return "[cyan]Moderate[/]"
-        return "[green]Well-diversified[/]"
+            return f"[cyan]{_t('conc_moderate')}[/]"
+        return f"[green]{_t('conc_well_diversified')}[/]"
 
     t.add_row(_t("holdings_count"), fmt_int(a.holdings_count), "")
     t.add_row(_t("top10_concentration"), fmt_pct(a.top10_concentration),
               _conc_assess(a.top10_concentration))
     t.add_row(_t("sector_hhi"), fmt_num(a.herfindahl_sector, 3),
-              "[dim]Lower = more even sector mix[/]"
+              f"[dim]{_t('note_lower_even_sector')}[/]"
               if a.herfindahl_sector is not None else "")
     t.add_row(_t("sector_count"), fmt_int(a.sector_count), "")
     t.add_row(_t("country_count"), fmt_int(a.country_count), "")
@@ -504,36 +504,36 @@ def render_risk(console: Console, report: FundReport) -> None:
         if v is None:
             return "[dim]N/A[/]"
         if v < 0.10:
-            return "[green]Low volatility[/]"
+            return f"[green]{_t('vol_low')}[/]"
         if v < 0.18:
-            return "[cyan]Equity-like[/]"
+            return f"[cyan]{_t('vol_equity_like')}[/]"
         if v < 0.30:
-            return "[yellow]Elevated[/]"
-        return "[bold red]High[/]"
+            return f"[yellow]{_t('vol_elevated')}[/]"
+        return f"[bold red]{_t('vol_high')}[/]"
 
     def _drawdown_assess(dd):
         if dd is None:
             return "[dim]N/A[/]"
         if dd > -0.10:
-            return "[green]Mild[/]"
+            return f"[green]{_t('dd_mild')}[/]"
         if dd > -0.20:
-            return "[cyan]Typical equity[/]"
+            return f"[cyan]{_t('dd_typical_equity')}[/]"
         if dd > -0.40:
-            return "[yellow]Severe[/]"
-        return "[bold red]Crash-tier[/]"
+            return f"[yellow]{_t('dd_severe')}[/]"
+        return f"[bold red]{_t('dd_crash_tier')}[/]"
 
     t.add_row(_t("volatility_1y"), fmt_pct(r.volatility_1y), _vol_assess(r.volatility_1y))
     t.add_row(_t("volatility_3y"), fmt_pct(r.volatility_3y), _vol_assess(r.volatility_3y))
     t.add_row(_t("max_drawdown_3y"), fmt_pct(r.max_drawdown_3y),
               _drawdown_assess(r.max_drawdown_3y))
     t.add_row(_t("beta_3y"), fmt_num(r.beta_3y),
-              "[dim]Sensitivity to benchmark[/]" if r.beta_3y is not None else "")
+              f"[dim]{_t('note_sensitivity_benchmark')}[/]" if r.beta_3y is not None else "")
     t.add_row(_t("tracking_error"), fmt_pct(r.tracking_error),
-              "[dim]Annualised σ of return gap[/]" if r.tracking_error is not None else "")
+              f"[dim]{_t('note_return_gap')}[/]" if r.tracking_error is not None else "")
     t.add_row(_t("tracking_difference"), fmt_pct(r.tracking_difference),
-              "[dim]TER-adjusted return gap[/]" if r.tracking_difference is not None else "")
+              f"[dim]{_t('note_ter_adjusted_gap')}[/]" if r.tracking_difference is not None else "")
     t.add_row("R²", fmt_num(r.r_squared, 3),
-              "[dim]Explained variance vs benchmark[/]" if r.r_squared is not None else "")
+              f"[dim]{_t('note_explained_variance')}[/]" if r.r_squared is not None else "")
     console.print(t)
 
 
@@ -669,15 +669,15 @@ def render_structure(console: Console, report: FundReport) -> None:
              "[green]Protects long-term holders[/]" if p.swing_pricing else "")
     if p.redemption_gates:
         _row("Redemption Gates", "Yes",
-             "[yellow]Manager may suspend redemptions[/]")
+             f"[yellow]{_t('note_gates_warning')}[/]")
     if p.lockup_period_days:
         _row("Lock-Up", f"{p.lockup_period_days} days",
-             "[yellow]Required holding period[/]")
+             f"[yellow]{_t('note_lockup')}[/]")
     if p.soft_closed:
         _row("Soft-Closed", "Yes",
              "[yellow]Existing holders only[/]")
     if p.hard_closed:
-        _row("Hard-Closed", "Yes", "[red]No subscriptions accepted[/]")
+        _row("Hard-Closed", "Yes", f"[red]{_t('note_hard_closed')}[/]")
 
     if p.trustee_or_custodian:
         _row("Trustee / Custodian", p.trustee_or_custodian)
