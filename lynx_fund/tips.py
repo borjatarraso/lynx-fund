@@ -139,9 +139,11 @@ def for_passive_investor(report: FundReport) -> List[str]:
         )
 
     # ── Replication / structure ──────────────────────────────────────────
-    rep = (p.replication or "").lower()
+    # Funds rarely use 'replication' as a first-class field; tolerate the
+    # attribute being absent (legacy ETF model carry-over).
+    rep = (getattr(p, "replication", "") or "").lower()
     if "synthetic" in rep or "swap" in rep:
-        cps = ", ".join(p.swap_counterparties) if p.swap_counterparties else "not disclosed"
+        cps = ", ".join(getattr(p, "swap_counterparties", []) or []) or "not disclosed"
         out.append(
             f"Synthetic / swap-based replication. Counterparties: {cps}. "
             "Verify the swap collateralisation policy in the prospectus."

@@ -14,6 +14,7 @@ Mirrors the visual structure of ``lynx.display`` (lynx-fundamental):
 """
 
 from __future__ import annotations
+from lynx_investor_core.translations import t as _t  # i18n helper
 
 from typing import Optional
 
@@ -194,7 +195,7 @@ def render_header(console: Console, report: FundReport) -> None:
     profile_table.add_row("Size Tier", f"[{tc}]{p.tier.value}[/]")
     console.print(Panel(
         profile_table,
-        title="[bold]Fund Profile[/]",
+        title=f"[bold]Fund {_t('description')}[/]",
         border_style="cyan",
     ))
 
@@ -207,7 +208,7 @@ def render_costs(console: Console, report: FundReport) -> None:
     c = report.costs
     if not c:
         return
-    t = Table(title="Costs", show_lines=True, border_style="yellow")
+    t = Table(title=_t("costs"), show_lines=True, border_style="yellow")
     t.add_column("Metric", style="bold", min_width=22)
     t.add_column("Value", justify="right", min_width=18)
     t.add_column("Assessment", min_width=28)
@@ -267,7 +268,7 @@ def render_income(console: Console, report: FundReport) -> None:
     i = report.income
     if not i:
         return
-    t = Table(title="Income & Distributions", show_lines=True, border_style="green")
+    t = Table(title=_t("income"), show_lines=True, border_style="green")
     t.add_column("Metric", style="bold", min_width=22)
     t.add_column("Value", justify="right", min_width=18)
     t.add_column("Assessment", min_width=28)
@@ -298,7 +299,7 @@ def render_liquidity(console: Console, report: FundReport) -> None:
     l = report.liquidity
     if not l:
         return
-    t = Table(title="Size & Liquidity", show_lines=True, border_style="cyan")
+    t = Table(title=_t("liquidity"), show_lines=True, border_style="cyan")
     t.add_column("Metric", style="bold", min_width=22)
     t.add_column("Value", justify="right", min_width=18)
     t.add_column("Assessment", min_width=28)
@@ -376,7 +377,7 @@ def render_performance(console: Console, report: FundReport) -> None:
         return
 
     # Returns table — magenta border like lynx-fundamental's growth section
-    t = Table(title="Performance (Total Return)",
+    t = Table(title=_t("performance"),
               show_lines=True, border_style="magenta")
     t.add_column("Window", style="bold", min_width=22)
     t.add_column("Return", justify="right", min_width=18)
@@ -396,7 +397,7 @@ def render_performance(console: Console, report: FundReport) -> None:
     console.print(t)
 
     # Risk-adjusted returns — cyan border to flag separate concept
-    t2 = Table(title="Risk-Adjusted Returns",
+    t2 = Table(title=f"{_t('performance')} — {_t('score')}",
                show_lines=True, border_style="cyan")
     t2.add_column("Metric", style="bold", min_width=22)
     t2.add_column("Value", justify="right", min_width=18)
@@ -428,7 +429,7 @@ def render_allocation(console: Console, report: FundReport) -> None:
         return
 
     # Diversification overview — bold yellow like the moat panel
-    t = Table(title="Diversification & Allocation",
+    t = Table(title=_t("diversification"),
               show_lines=True, border_style="bold yellow")
     t.add_column("Metric", style="bold", min_width=22)
     t.add_column("Value", justify="right", min_width=18)
@@ -456,7 +457,7 @@ def render_allocation(console: Console, report: FundReport) -> None:
     console.print(t)
 
     if a.sector_breakdown:
-        st = Table(title="Sector Breakdown",
+        st = Table(title=f"{_t('allocation')}: Sector",
                    show_lines=True, border_style="blue")
         st.add_column("Sector", style="bold", min_width=22)
         st.add_column("Weight", justify="right", min_width=12)
@@ -465,7 +466,7 @@ def render_allocation(console: Console, report: FundReport) -> None:
         console.print(st)
 
     if a.country_breakdown:
-        ct = Table(title="Country Breakdown",
+        ct = Table(title=f"{_t('allocation')}: Country",
                    show_lines=True, border_style="blue")
         ct.add_column("Country", style="bold", min_width=22)
         ct.add_column("Weight", justify="right", min_width=12)
@@ -495,7 +496,7 @@ def render_risk(console: Console, report: FundReport) -> None:
     r = report.risk
     if not r:
         return
-    t = Table(title="Risk Profile",
+    t = Table(title=_t("risk"),
               show_lines=True, border_style="red")
     t.add_column("Metric", style="bold", min_width=22)
     t.add_column("Value", justify="right", min_width=18)
@@ -558,7 +559,7 @@ def render_verdict(console: Console, report: FundReport) -> None:
     ).strip()
     console.print(Panel(
         body,
-        title="[bold]Assessment Conclusion[/]",
+        title=f"[bold]{_t('summary')}[/]",
         border_style=style,
     ))
 
@@ -692,7 +693,7 @@ def render_structure(console: Console, report: FundReport) -> None:
     if not rows:
         return
 
-    t = Table(title="Structure & Regulation", show_lines=True, border_style="blue")
+    t = Table(title=_t("structure"), show_lines=True, border_style="blue")
     t.add_column("Field", style="bold", min_width=22)
     t.add_column("Value", min_width=22)
     t.add_column("Note", min_width=30)
@@ -707,7 +708,7 @@ def render_manager(console: Console, report: FundReport) -> None:
     if not p.managers and p.avg_manager_tenure_years is None:
         return
 
-    t = Table(title="Management", show_lines=True, border_style="magenta")
+    t = Table(title=_t("manager"), show_lines=True, border_style="magenta")
     t.add_column("Manager", style="bold", min_width=22)
     t.add_column("Role", min_width=12)
     t.add_column("Tenure", justify="right", min_width=10)
@@ -756,7 +757,7 @@ def render_share_classes(console: Console, report: FundReport) -> None:
     classes = report.share_classes or []
     if not classes:
         return
-    t = Table(title="Share Classes", show_lines=True, border_style="cyan")
+    t = Table(title=_t("share_classes"), show_lines=True, border_style="cyan")
     t.add_column("Class", style="bold", min_width=12)
     t.add_column("Ticker", min_width=10)
     t.add_column("TER", justify="right", min_width=8)
@@ -784,7 +785,7 @@ def render_load_adjusted(console: Console, report: FundReport) -> None:
         return
     if not any((p.load_adjusted_return_1y, p.load_adjusted_return_5y, p.load_adjusted_return_10y)):
         return
-    t = Table(title="Load-Adjusted Returns",
+    t = Table(title=f"{_t('performance')} (Load-Adjusted)",
               show_lines=True, border_style="yellow")
     t.add_column("Window", style="bold", min_width=14)
     t.add_column("Headline", justify="right", min_width=12)
@@ -813,7 +814,7 @@ def render_persistence(console: Console, report: FundReport) -> None:
     p = report.performance
     if not p or (not p.quartile_history and p.persistence_score is None):
         return
-    t = Table(title="Persistence", show_lines=True, border_style="green")
+    t = Table(title=_t("performance") + " — Persistence", show_lines=True, border_style="green")
     t.add_column("Year", style="bold", min_width=8)
     t.add_column("Quartile", justify="right", min_width=10)
     t.add_column("Comment", min_width=24)
@@ -905,7 +906,7 @@ def _legacy_render_premium_discount_stats_unused(console: Console, report: FundR
 def render_calendar_returns(console: Console, report: FundReport) -> None:
     if not report.performance or not report.performance.calendar_returns:
         return
-    t = Table(title="Calendar-Year Returns",
+    t = Table(title=f"{_t('performance')} — Calendar",
               show_lines=True, border_style="magenta")
     t.add_column("Year", style="bold", min_width=6)
     t.add_column("Return", justify="right", min_width=12)
@@ -935,7 +936,7 @@ def render_capture_ratios(console: Console, report: FundReport) -> None:
     ]
     if all(f is None for f in fields):
         return
-    t = Table(title="Capture Ratios & Recovery",
+    t = Table(title=f"{_t('performance')} — Capture",
               show_lines=True, border_style="cyan")
     t.add_column("Metric", style="bold", min_width=24)
     t.add_column("Value", justify="right", min_width=14)
@@ -994,7 +995,7 @@ def render_tail_risk(console: Console, report: FundReport) -> None:
         return
     if all(v is None for v in (r.var_95_1y, r.cvar_95_1y, r.skewness_3y, r.kurtosis_3y)):
         return
-    t = Table(title="Tail Risk", show_lines=True, border_style="red")
+    t = Table(title=_t("risk") + " — Tail", show_lines=True, border_style="red")
     t.add_column("Metric", style="bold", min_width=22)
     t.add_column("Value", justify="right", min_width=14)
     t.add_column("Interpretation", min_width=32)
@@ -1038,7 +1039,7 @@ def render_esg(console: Console, report: FundReport) -> None:
               e.carbon_intensity, e.controversy_score, e.exclusions]
     if all(not f for f in fields):
         return
-    t = Table(title="Sustainability (ESG)",
+    t = Table(title="ESG",
               show_lines=True, border_style="green")
     t.add_column("Metric", style="bold", min_width=22)
     t.add_column("Value", min_width=22)
