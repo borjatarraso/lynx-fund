@@ -783,7 +783,7 @@ def render_load_adjusted(console: Console, report: FundReport) -> None:
         return
     if not any((p.load_adjusted_return_1y, p.load_adjusted_return_5y, p.load_adjusted_return_10y)):
         return
-    t = Table(title=f"{_t('performance')} (Load-Adjusted)",
+    t = Table(title=f"{_t('performance')} ({_t('perf_load_adjusted')})",
               show_lines=True, border_style="yellow")
     t.add_column("Window", style="bold", min_width=14)
     t.add_column("Headline", justify="right", min_width=12)
@@ -904,7 +904,7 @@ def _legacy_render_premium_discount_stats_unused(console: Console, report: FundR
 def render_calendar_returns(console: Console, report: FundReport) -> None:
     if not report.performance or not report.performance.calendar_returns:
         return
-    t = Table(title=f"{_t('performance')} — Calendar",
+    t = Table(title=f"{_t('performance')} — {_t('perf_calendar')}",
               show_lines=True, border_style="magenta")
     t.add_column("Year", style="bold", min_width=6)
     t.add_column("Return", justify="right", min_width=12)
@@ -934,7 +934,7 @@ def render_capture_ratios(console: Console, report: FundReport) -> None:
     ]
     if all(f is None for f in fields):
         return
-    t = Table(title=f"{_t('performance')} — Capture",
+    t = Table(title=f"{_t('performance')} — {_t('perf_capture')}",
               show_lines=True, border_style="cyan")
     t.add_column(_t("metric"), style="bold", min_width=24)
     t.add_column(_t("value"), justify="right", min_width=14)
