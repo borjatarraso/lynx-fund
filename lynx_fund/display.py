@@ -182,20 +182,20 @@ def render_header(console: Console, report: FundReport) -> None:
     # Profile card
     profile_table = Table(show_header=False, box=None, padding=(0, 2))
     profile_table.add_column("Key", style="bold")
-    profile_table.add_column("Value")
-    profile_table.add_row("Name", p.name or "[dim]N/A[/]")
-    profile_table.add_row("Family", p.fund_family or "[dim]N/A[/]")
-    profile_table.add_row("Category", p.category or "[dim]N/A[/]")
-    profile_table.add_row("Asset Class", p.asset_class or "[dim]N/A[/]")
-    profile_table.add_row("Domicile", p.domicile or "[dim]N/A[/]")
-    profile_table.add_row("Inception", p.inception_date or "[dim]N/A[/]")
-    profile_table.add_row("Benchmark", p.benchmark or "[dim]N/A[/]")
-    profile_table.add_row("Distribution", p.distribution_policy or "[dim]N/A[/]")
-    profile_table.add_row("AUM", fmt_money(p.aum))
-    profile_table.add_row("Size Tier", f"[{tc}]{p.tier.value}[/]")
+    profile_table.add_column(_t("value"))
+    profile_table.add_row(_t("name"), p.name or "[dim]N/A[/]")
+    profile_table.add_row(_t("family"), p.fund_family or "[dim]N/A[/]")
+    profile_table.add_row(_t("category"), p.category or "[dim]N/A[/]")
+    profile_table.add_row(_t("asset_class"), p.asset_class or "[dim]N/A[/]")
+    profile_table.add_row(_t("domicile"), p.domicile or "[dim]N/A[/]")
+    profile_table.add_row(_t("inception"), p.inception_date or "[dim]N/A[/]")
+    profile_table.add_row(_t("benchmark"), p.benchmark or "[dim]N/A[/]")
+    profile_table.add_row(_t("distribution"), p.distribution_policy or "[dim]N/A[/]")
+    profile_table.add_row(_t("aum"), fmt_money(p.aum))
+    profile_table.add_row(_t("size_tier"), f"[{tc}]{p.tier.value}[/]")
     console.print(Panel(
         profile_table,
-        title=f"[bold]Fund {_t('description')}[/]",
+        title=f"[bold]{_t('fund_profile')}[/]",
         border_style="cyan",
     ))
 
@@ -209,9 +209,9 @@ def render_costs(console: Console, report: FundReport) -> None:
     if not c:
         return
     t = Table(title=_t("costs"), show_lines=True, border_style="yellow")
-    t.add_column("Metric", style="bold", min_width=22)
-    t.add_column("Value", justify="right", min_width=18)
-    t.add_column("Assessment", min_width=28)
+    t.add_column(_t("metric"), style="bold", min_width=22)
+    t.add_column(_t("value"), justify="right", min_width=18)
+    t.add_column(_t("assessment"), min_width=28)
 
     er = c.expense_ratio
     if er is None:
@@ -269,9 +269,9 @@ def render_income(console: Console, report: FundReport) -> None:
     if not i:
         return
     t = Table(title=_t("income"), show_lines=True, border_style="green")
-    t.add_column("Metric", style="bold", min_width=22)
-    t.add_column("Value", justify="right", min_width=18)
-    t.add_column("Assessment", min_width=28)
+    t.add_column(_t("metric"), style="bold", min_width=22)
+    t.add_column(_t("value"), justify="right", min_width=18)
+    t.add_column(_t("assessment"), min_width=28)
 
     def _yield_assess(y):
         if y is None:
@@ -300,9 +300,9 @@ def render_liquidity(console: Console, report: FundReport) -> None:
     if not l:
         return
     t = Table(title=_t("liquidity"), show_lines=True, border_style="cyan")
-    t.add_column("Metric", style="bold", min_width=22)
-    t.add_column("Value", justify="right", min_width=18)
-    t.add_column("Assessment", min_width=28)
+    t.add_column(_t("metric"), style="bold", min_width=22)
+    t.add_column(_t("value"), justify="right", min_width=18)
+    t.add_column(_t("assessment"), min_width=28)
 
     aum_assess = "[dim]N/A[/]"
     if l.aum is not None:
@@ -316,7 +316,7 @@ def render_liquidity(console: Console, report: FundReport) -> None:
             aum_assess = "[yellow]Small — watch spreads[/]"
         else:
             aum_assess = "[bold red]Micro / closure risk[/]"
-    t.add_row("AUM", fmt_money(l.aum), aum_assess)
+    t.add_row(_t("aum"), fmt_money(l.aum), aum_assess)
     t.add_row("Fund Age", fmt_years(l.fund_age_years),
               "[green]Track record established[/]"
               if (l.fund_age_years or 0) >= 5 else "[yellow]Younger fund[/]")
@@ -399,9 +399,9 @@ def render_performance(console: Console, report: FundReport) -> None:
     # Risk-adjusted returns — cyan border to flag separate concept
     t2 = Table(title=f"{_t('performance')} — {_t('score')}",
                show_lines=True, border_style="cyan")
-    t2.add_column("Metric", style="bold", min_width=22)
-    t2.add_column("Value", justify="right", min_width=18)
-    t2.add_column("Assessment", min_width=28)
+    t2.add_column(_t("metric"), style="bold", min_width=22)
+    t2.add_column(_t("value"), justify="right", min_width=18)
+    t2.add_column(_t("assessment"), min_width=28)
 
     def _sharpe_assess(s):
         if s is None:
@@ -431,9 +431,9 @@ def render_allocation(console: Console, report: FundReport) -> None:
     # Diversification overview — bold yellow like the moat panel
     t = Table(title=_t("diversification"),
               show_lines=True, border_style="bold yellow")
-    t.add_column("Metric", style="bold", min_width=22)
-    t.add_column("Value", justify="right", min_width=18)
-    t.add_column("Assessment", min_width=28)
+    t.add_column(_t("metric"), style="bold", min_width=22)
+    t.add_column(_t("value"), justify="right", min_width=18)
+    t.add_column(_t("assessment"), min_width=28)
 
     def _conc_assess(c):
         if c is None:
@@ -498,9 +498,9 @@ def render_risk(console: Console, report: FundReport) -> None:
         return
     t = Table(title=_t("risk"),
               show_lines=True, border_style="red")
-    t.add_column("Metric", style="bold", min_width=22)
-    t.add_column("Value", justify="right", min_width=18)
-    t.add_column("Assessment", min_width=28)
+    t.add_column(_t("metric"), style="bold", min_width=22)
+    t.add_column(_t("value"), justify="right", min_width=18)
+    t.add_column(_t("assessment"), min_width=28)
 
     def _vol_assess(v):
         if v is None:
@@ -567,7 +567,7 @@ def render_verdict(console: Console, report: FundReport) -> None:
     if v.category_scores:
         t = Table(title="Category Scores",
                   show_lines=True, border_style="cyan")
-        t.add_column("Category", style="bold", min_width=18)
+        t.add_column(_t("category"), style="bold", min_width=18)
         t.add_column("Score", justify="right", min_width=12)
         t.add_column("Bar", min_width=24)
         for cat, score in v.category_scores.items():
@@ -694,9 +694,9 @@ def render_structure(console: Console, report: FundReport) -> None:
         return
 
     t = Table(title=_t("structure"), show_lines=True, border_style="blue")
-    t.add_column("Field", style="bold", min_width=22)
-    t.add_column("Value", min_width=22)
-    t.add_column("Note", min_width=30)
+    t.add_column(_t("field"), style="bold", min_width=22)
+    t.add_column(_t("value"), min_width=22)
+    t.add_column(_t("note"), min_width=30)
     for label, value, note in rows:
         t.add_row(label, str(value), note)
     console.print(t)
@@ -712,7 +712,7 @@ def render_manager(console: Console, report: FundReport) -> None:
     t.add_column("Manager", style="bold", min_width=22)
     t.add_column("Role", min_width=12)
     t.add_column("Tenure", justify="right", min_width=10)
-    t.add_column("Note", min_width=24)
+    t.add_column(_t("note"), min_width=24)
 
     if not p.managers and p.avg_manager_tenure_years is not None:
         avg = p.avg_manager_tenure_years
@@ -790,7 +790,7 @@ def render_load_adjusted(console: Console, report: FundReport) -> None:
     t.add_column("Window", style="bold", min_width=14)
     t.add_column("Headline", justify="right", min_width=12)
     t.add_column("Load-adjusted", justify="right", min_width=14)
-    t.add_column("Note", min_width=28)
+    t.add_column(_t("note"), min_width=28)
 
     rows = [
         ("1Y", p.return_1y, p.load_adjusted_return_1y),
@@ -862,9 +862,9 @@ def _legacy_render_premium_discount_stats_unused(console: Console, report: FundR
         return
     t = Table(title="Premium / Discount & Flows (1Y)",
               show_lines=True, border_style="cyan")
-    t.add_column("Metric", style="bold", min_width=24)
-    t.add_column("Value", justify="right", min_width=14)
-    t.add_column("Note", min_width=28)
+    t.add_column(_t("metric"), style="bold", min_width=24)
+    t.add_column(_t("value"), justify="right", min_width=14)
+    t.add_column(_t("note"), min_width=28)
 
     def _add(label, val, note):
         t.add_row(label, val, note)
@@ -938,9 +938,9 @@ def render_capture_ratios(console: Console, report: FundReport) -> None:
         return
     t = Table(title=f"{_t('performance')} — Capture",
               show_lines=True, border_style="cyan")
-    t.add_column("Metric", style="bold", min_width=24)
-    t.add_column("Value", justify="right", min_width=14)
-    t.add_column("Interpretation", min_width=28)
+    t.add_column(_t("metric"), style="bold", min_width=24)
+    t.add_column(_t("value"), justify="right", min_width=14)
+    t.add_column(_t("interpretation"), min_width=28)
 
     def _capture_assess(c, kind: str):
         if c is None:
@@ -996,9 +996,9 @@ def render_tail_risk(console: Console, report: FundReport) -> None:
     if all(v is None for v in (r.var_95_1y, r.cvar_95_1y, r.skewness_3y, r.kurtosis_3y)):
         return
     t = Table(title=_t("risk") + " — Tail", show_lines=True, border_style="red")
-    t.add_column("Metric", style="bold", min_width=22)
-    t.add_column("Value", justify="right", min_width=14)
-    t.add_column("Interpretation", min_width=32)
+    t.add_column(_t("metric"), style="bold", min_width=22)
+    t.add_column(_t("value"), justify="right", min_width=14)
+    t.add_column(_t("interpretation"), min_width=32)
     if r.var_95_1y is not None:
         t.add_row("VaR (1d, 95%)", fmt_pct(r.var_95_1y, 2),
                   "[dim]Worst expected daily loss in 19 of 20 days[/]")
@@ -1041,9 +1041,9 @@ def render_esg(console: Console, report: FundReport) -> None:
         return
     t = Table(title="ESG",
               show_lines=True, border_style="green")
-    t.add_column("Metric", style="bold", min_width=22)
-    t.add_column("Value", min_width=22)
-    t.add_column("Interpretation", min_width=28)
+    t.add_column(_t("metric"), style="bold", min_width=22)
+    t.add_column(_t("value"), min_width=22)
+    t.add_column(_t("interpretation"), min_width=28)
     if e.score is not None:
         t.add_row("ESG Score", f"{e.score:.1f}",
                   "[dim]Higher is better; convention varies by provider[/]")
@@ -1101,10 +1101,10 @@ def render_passive_checklist(console: Console, report: FundReport) -> None:
         border_style="bold cyan",
         caption=summary,
     )
-    t.add_column("Status", min_width=10)
-    t.add_column("Check", style="bold", min_width=22)
+    t.add_column(_t("status"), min_width=10)
+    t.add_column(_t("check"), style="bold", min_width=22)
     t.add_column("Detail", min_width=32)
-    t.add_column("Rule of thumb", style="dim", min_width=28)
+    t.add_column(_t("rule_of_thumb"), style="dim", min_width=28)
     for c in report.passive_checklist:
         icon, _ = _STATUS_ICON.get(c.status, ("[dim]·[/]", "dim"))
         t.add_row(icon, c.label, c.message, c.rule_of_thumb)
