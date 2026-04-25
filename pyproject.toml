@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name            = "lynx-fund"
+version = "6.0.0"
+description     = "Lynx Fund — Mutual fund / index fund analysis: share classes, fees, manager tenure, persistence, tax drag"
+readme          = "README.md"
+requires-python = ">=3.10"
+license         = {text = "BSD-3-Clause"}
+authors         = [{name = "Borja Tarraso", email = "borja.tarraso@member.fsf.org"}]
+keywords        = ["finance", "investing", "mutual-fund", "index-fund", "passive-investing", "fund-analysis"]
+classifiers     = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies    = [
+    "lynx-investor-core>=6.0.0",
+    "yfinance>=0.2.40",
+    "requests>=2.31",
+    "beautifulsoup4>=4.12",
+    "rich>=13.7",
+    "textual>=0.50",
+    "feedparser>=6.0",
+    "pandas>=2.1",
+    "numpy>=1.26",
+    "argcomplete>=3.0",
+]
+
+[project.optional-dependencies]
+pdf = ["weasyprint>=60"]
+
+[project.urls]
+Homepage   = "https://github.com/borjatarraso/lynx-fund"
+Repository = "https://github.com/borjatarraso/lynx-fund"
+Issues     = "https://github.com/borjatarraso/lynx-fund/issues"
+Changelog  = "https://github.com/borjatarraso/lynx-fund/blob/main/CHANGELOG.md"
+
+[project.scripts]
+lynx-fund = "lynx_fund.__main__:main"
+
+[project.entry-points."lynx_investor_suite.agents"]
+fund = "lynx_fund.plugin:register"
+
+[tool.setuptools.packages.find]
+include = ["lynx_fund*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"

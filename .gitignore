@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Data caches
+data/
+data_test/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
