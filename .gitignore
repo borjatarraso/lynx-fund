@@ -21,3 +21,4 @@ data_test/
 *.swp
 *.swo
 .DS_Store
+.venv/
