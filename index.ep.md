@@ -79,7 +79,7 @@ Part of the LINCE company · © All rights reserved
 ## Run it
 
 ```bash
-cd ~/claude/lince-investor/lynx-fund
+cd ~/devel/lince-investor/lynx-fund
 ./run                                 # project runner
 lynx-fund                             # console entry point
 python3 -m lynx_fund                  # runnable package
